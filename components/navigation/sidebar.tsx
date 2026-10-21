@@ -81,7 +81,7 @@ export default function Sidebar() {
       className={`sticky overflow-hidden whitespace-nowrap top-0 shrink-0 bg-surface text-ink-secondary ${isCollapsed ? "w-20" : "w-60"} transition-all duration-200 border-r border-r-line p-5 h-screen`}
     >
       <div
-        className={`${isCollapsed && "flex-col gap-2"} mb-12 px-2 flex items-center justify-between`}
+        className={`${isCollapsed ? "flex-col gap-2" : ""} mb-12 px-2 flex items-center justify-between`}
       >
         <div className="flex gap-2 items-center">
           <div className="w-8 h-8 bg-ink rounded-lg text-surface cursor-default flex items-center justify-center">
@@ -91,6 +91,7 @@ export default function Sidebar() {
         </div>
 
         <button
+          title="Sidebar"
           onClick={() => setIsCollapsed((prev) => !prev)}
           className="hover:bg-stone-100 transition-colors duration-200 cursor-pointer p-2 rounded-md"
         >

@@ -1,28 +1,39 @@
-const formatDateVar = new Intl.DateTimeFormat("en-GB", {
-  day: "numeric",
-  month: "long",
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+  day: "2-digit",
+  month: "short",
   year: "numeric",
 });
 
-const formatDateTimeVar = new Intl.DateTimeFormat("en-GB", {
+const dateTimeFormatter = new Intl.DateTimeFormat("en-GB", {
+  hour12: false,
   hour: "2-digit",
   minute: "2-digit",
+  day: "2-digit",
+  month: "short",
   year: "numeric",
 });
 
-const naira = new Intl.NumberFormat("en-NG", {
+const nairaFormatter = new Intl.NumberFormat("en-NG", {
   style: "currency",
   currency: "NGN",
 });
 
 export function formatDate(date: string) {
-  return formatDateVar.format(new Date(date));
+  return dateFormatter.format(new Date(date));
 }
 
 export function formatDateTime(date: string) {
-  return formatDateTimeVar.format(new Date(date));
+  return dateTimeFormatter.format(new Date(date));
 }
 
 export function formatNaira(kobo: number) {
-  return naira.format(kobo / 100);
+  return nairaFormatter.format(kobo / 100);
+}
+
+export function captilaze(word: string) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+export function getInitials(firstName: string, lastName: string) {
+  return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
 }

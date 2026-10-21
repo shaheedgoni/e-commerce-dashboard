@@ -1,6 +1,7 @@
 "use client";
 
 import { fakeUser } from "@/lib/fakeUser";
+import { captilaze, getInitials } from "@/lib/format";
 import { SquareArrowRightExit } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -52,10 +53,10 @@ export default function Header() {
           <span
             className={`text-xs px-2 py-0.5 rounded-md ${fakeUser.role === "admin" ? "bg-accent-soft text-accent" : "bg-stone-100 text-ink-secondary"}`}
           >
-            {fakeUser.role[0].toUpperCase() + fakeUser.role.slice(1)}
+            {captilaze(fakeUser.role)}
           </span>
           <span className="size-9 rounded-full bg-stone-200 text-xs font-semibold flex items-center justify-center">
-            {`${fakeUser.firstName[0]}${fakeUser.lastName[0]}`.toUpperCase()}
+            {getInitials(fakeUser.firstName, fakeUser.lastName)}
           </span>
         </button>
 
