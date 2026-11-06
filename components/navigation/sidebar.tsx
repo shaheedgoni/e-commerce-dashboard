@@ -93,7 +93,7 @@ export default function Sidebar() {
         <button
           title="Sidebar"
           onClick={() => setIsCollapsed((prev) => !prev)}
-          className="hover:bg-stone-100 transition-colors duration-200 cursor-pointer p-2 rounded-md"
+          className="hover:bg-stone-100 cursor-pointer p-2 rounded-md"
         >
           <PanelLeft size={18} className="hover:cursor-pointer" />
         </button>

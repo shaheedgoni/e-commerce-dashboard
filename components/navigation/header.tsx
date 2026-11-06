@@ -44,7 +44,7 @@ export default function Header() {
       <div ref={menuRef} className="relative">
         <button
           onClick={() => setIsOpen((prev) => !prev)}
-          className={`flex items-center gap-3 py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer hover:bg-stone-100 ${isOpen ? "bg-stone-100" : ""}`}
+          className={`flex items-center gap-3 py-2 px-4 rounded-lg cursor-pointer hover:bg-stone-50 ${isOpen ? "bg-stone-50" : ""}`}
         >
           <p>
             {fakeUser.firstName} {fakeUser.lastName}
@@ -71,7 +71,7 @@ export default function Header() {
 
             <div className="border-t border-line" />
 
-            <button className="flex items-center w-full gap-2 px-4 py-2.5 cursor-pointer hover:bg-stone-100">
+            <button className="flex items-center w-full gap-2 px-4 py-2.5 cursor-pointer text-danger hover:bg-stone-100">
               <SquareArrowRightExit size={18} />
               <p>Log out</p>
             </button>
