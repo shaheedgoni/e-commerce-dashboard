@@ -3,6 +3,7 @@
 import Button from "@/components/ui/button";
 import Card from "@/components/ui/card";
 import Input from "@/components/ui/input";
+import Logo from "@/components/ui/logo";
 import { Login } from "@/lib/services/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -26,9 +27,21 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="h-screen flex items-center">
-      <Card className="w-100 p-6 mx-auto">
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+    <main className="min-h-screen flex items-center justify-center bg-canvas p-4">
+      <Card className="w-full max-w-sm p-8">
+        <div className="flex flex-col items-center text-center gap-3 mb-6">
+          <Logo size={40} />
+          <p className="text-sm font-semibold text-ink-secondary">Shoply</p>
+          <h1 className="text-xl font-semibold text-ink">Sign in to admin</h1>
+        </div>
+
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          {error ? (
+            <p className="text-sm text-danger bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              {error}
+            </p>
+          ) : null}
+
           <Input
             label="Email"
             type="email"
@@ -45,9 +58,9 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          {error ? <p className="text-sm text-danger">{error}</p> : null}
-
-          <Button type="submit">Submit</Button>
+          <Button type="submit" className="w-full">
+            Sign in
+          </Button>
         </form>
       </Card>
     </main>

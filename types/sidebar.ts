@@ -12,7 +12,6 @@ export type adminUserProps = {
   email: string | null;
   firstName: string;
   lastName: string;
-
   phone: string | null;
   role: "admin" | "staff";
   isActive: boolean;

@@ -1,9 +1,9 @@
 "use client";
 
-import { fakeUser } from "@/lib/fakeUser";
+import { GetUser, Logout } from "@/lib/services/auth";
 import { captilaze, getInitials } from "@/lib/format";
 import { SquareArrowRightExit } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 function getPageTitle(pathname: string) {
@@ -17,9 +17,16 @@ function getPageTitle(pathname: string) {
 }
 
 export default function Header() {
+  const user = GetUser();
+  const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  async function handleLogout() {
+    await Logout();
+    router.push("/login");
+  }
 
   useEffect(() => {
     function closeIfOutside(event: MouseEvent) {
@@ -47,16 +54,16 @@ export default function Header() {
           className={`flex items-center gap-3 py-2 px-4 rounded-lg cursor-pointer hover:bg-stone-50 ${isOpen ? "bg-stone-50" : ""}`}
         >
           <p>
-            {fakeUser.firstName} {fakeUser.lastName}
+            {user.firstName} {user.lastName}
           </p>
 
           <span
-            className={`text-xs px-2 py-0.5 rounded-md ${fakeUser.role === "admin" ? "bg-accent-soft text-accent" : "bg-stone-100 text-ink-secondary"}`}
+            className={`text-xs px-2 py-0.5 rounded-md ${user.role === "admin" ? "bg-accent-soft text-accent" : "bg-stone-100 text-ink-secondary"}`}
           >
-            {captilaze(fakeUser.role)}
+            {captilaze(user.role)}
           </span>
           <span className="size-9 rounded-full bg-stone-200 text-xs font-semibold flex items-center justify-center">
-            {getInitials(fakeUser.firstName, fakeUser.lastName)}
+            {getInitials(user.firstName, user.lastName)}
           </span>
         </button>
 
@@ -64,14 +71,17 @@ export default function Header() {
           <div className="absolute overflow-hidden right-0 top-full mt-2 w-60 bg-surface border border-line rounded-xl shadow-sm">
             <div className="px-4 py-3">
               <span className="block">
-                {fakeUser.firstName} {fakeUser.lastName}
+                {user.firstName} {user.lastName}
               </span>
-              <span className="text-xs text-ink-muted">{fakeUser.email}</span>
+              <span className="text-xs text-ink-muted">{user.email}</span>
             </div>
 
             <div className="border-t border-line" />
 
-            <button className="flex items-center w-full gap-2 px-4 py-2.5 cursor-pointer text-danger hover:bg-stone-100">
+            <button
+              onClick={handleLogout}
+              className="flex items-center w-full gap-2 px-4 py-2.5 cursor-pointer text-danger hover:bg-stone-100"
+            >
               <SquareArrowRightExit size={18} />
               <p>Log out</p>
             </button>

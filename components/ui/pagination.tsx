@@ -1,5 +1,3 @@
-import Button from "./button";
-
 type paginationProps = {
   page: number;
   limit: number;

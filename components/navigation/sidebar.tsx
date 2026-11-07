@@ -1,6 +1,6 @@
 "use client";
 
-import { fakeUser } from "@/lib/fakeUser";
+import { GetUser } from "@/lib/services/auth";
 import { sidebarContentProps } from "@/types/sidebar";
 import {
   Box,
@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import Logo from "../ui/logo";
 
 const sidebarContent: sidebarContentProps[] = [
   {
@@ -69,11 +70,13 @@ const sidebarContent: sidebarContentProps[] = [
 ];
 
 export default function Sidebar() {
+  const user = GetUser();
+
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const visibleLinks = sidebarContent.filter(
-    (item) => !item.adminOnly || fakeUser.role === "admin",
+    (item) => !item.adminOnly || user.role === "admin",
   );
 
   return (
@@ -84,9 +87,7 @@ export default function Sidebar() {
         className={`${isCollapsed ? "flex-col gap-2" : ""} mb-12 px-2 flex items-center justify-between`}
       >
         <div className="flex gap-2 items-center">
-          <div className="w-8 h-8 bg-ink rounded-lg text-surface cursor-default flex items-center justify-center">
-            S
-          </div>
+          <Logo size={32} />
           {!isCollapsed && <p className="text-lg font-semibold">Shoply</p>}
         </div>
 
