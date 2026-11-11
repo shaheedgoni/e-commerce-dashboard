@@ -1,7 +1,7 @@
 import React from "react";
 
 type tableProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   footer?: React.ReactNode;
   className?: string;
 };

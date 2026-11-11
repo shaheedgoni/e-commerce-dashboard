@@ -134,7 +134,7 @@ export default function OrdersPage() {
         <ErrorState
           message="We couldn't load the orders."
           requestId="req_8f2a91"
-          onReentry={() => alert("Retry clicked")}
+          onReentry={() => window.location.reload()}
         />
       </div>
     );

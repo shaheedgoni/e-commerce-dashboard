@@ -19,7 +19,7 @@ export default function Input({
 
   return (
     <label className="flex flex-col">
-      <span className="text-sm font-medium text-ink">{label}</span>
+      <span className="text-sm font-medium text-ink mb-1">{label}</span>
 
       <input
         type={type}
