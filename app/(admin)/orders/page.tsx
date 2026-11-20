@@ -12,6 +12,7 @@ import { GetOrders } from "@/lib/services/order";
 import SearchInput from "@/components/ui/search-input";
 import Select from "@/components/ui/select";
 import DateInput from "@/components/ui/date-input";
+import Link from "next/link";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<orderProps[]>([]);
@@ -175,7 +176,14 @@ export default function OrdersPage() {
         <tbody>
           {orders.map((order) => (
             <Tr key={order.id}>
-              <Td className="font-medium">{order.number}</Td>
+              <Td className="font-medium">
+                <Link
+                  href={`/orders/${order.id}`}
+                  className="hover:text-accent hover:underline"
+                >
+                  {order.number}
+                </Link>
+              </Td>
               <Td>{order.customer ? order.customer.name : "Walk-in"}</Td>
               <Td>
                 <Badge variant={channelMap[order.channel].variant}>

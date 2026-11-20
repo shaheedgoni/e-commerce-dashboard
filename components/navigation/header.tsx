@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { GetUser, Logout } from "@/lib/services/auth";
 import { captilaze, getInitials } from "@/lib/format";
 import { SquareArrowRightExit } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { TitleContext } from "@/lib/titleContext";
 
 function getPageTitle(pathname: string) {
   const segments = pathname.split("/").filter(Boolean);
@@ -22,6 +24,8 @@ export default function Header() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { title } = useContext(TitleContext);
+  const segments = pathname.split("/").filter(Boolean);
 
   async function handleLogout() {
     await Logout();
@@ -44,9 +48,22 @@ export default function Header() {
 
   return (
     <header className="flex items-center justify-between h-20 bg-surface border-b border-line px-8 sticky top-0 z-10">
-      <h1 className="text-xl font-semibold text-ink">
-        {getPageTitle(pathname)}
-      </h1>
+      {segments.length > 1 && title ? (
+        <h1 className="text-xl font-semibold flex items-center gap-2">
+          <Link
+            href={`/${segments[0]}`}
+            className="text-ink-secondary hover:text-ink"
+          >
+            {getPageTitle(pathname)}
+          </Link>
+          <span className="text-ink-muted">/</span>
+          <span className="text-ink">{title}</span>
+        </h1>
+      ) : (
+        <h1 className="text-xl font-semibold text-ink">
+          {getPageTitle(pathname)}
+        </h1>
+      )}
 
       <div ref={menuRef} className="relative">
         <button

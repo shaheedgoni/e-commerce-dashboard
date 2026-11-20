@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { Refresh } from "@/lib/services/auth";
+import { TitleContext } from "@/lib/titleContext";
 
 export default function AdminLayout({
   children,
@@ -17,6 +18,7 @@ export default function AdminLayout({
     Boolean(api.defaults.headers.common.Authorization),
   );
   const started = useRef(false);
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     if (ready || started.current) return;
@@ -30,14 +32,16 @@ export default function AdminLayout({
   if (!ready) return null;
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
+    <TitleContext.Provider value={{ title, setTitle }}>
+      <div className="flex min-h-screen">
+        <Sidebar />
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <Header />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <Header />
 
-        <main className="flex-1 p-8">{children}</main>
+          <main className="flex-1 p-8">{children}</main>
+        </div>
       </div>
-    </div>
+    </TitleContext.Provider>
   );
 }

@@ -1,4 +1,4 @@
-import { ordersResponseProps } from "@/types/orderTypes";
+import { orderDetailProps, ordersResponseProps } from "@/types/orderTypes";
 import { api } from "../api";
 
 export async function GetOrders(
@@ -20,5 +20,10 @@ export async function GetOrders(
     },
   });
 
+  return response.data;
+}
+
+export async function GetOrder(id: string) {
+  const response = await api.get<orderDetailProps>(`/admin/orders/${id}`);
   return response.data;
 }
