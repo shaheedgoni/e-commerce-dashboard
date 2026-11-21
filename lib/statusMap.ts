@@ -6,8 +6,8 @@ type statusInfo = {
 };
 
 export const orderStateMap: Record<string, statusInfo> = {
-  open: {
-    label: "open",
+  O: {
+    label: "Open",
     variant: "neutral",
   },
   pending_payment: {

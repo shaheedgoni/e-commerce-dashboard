@@ -31,6 +31,7 @@ export default function StockPage() {
   const [selected, setSelected] = useState<stockProps | null>(null);
   const [quantity, setQuantity] = useState("");
   const [mode, setMode] = useState("set");
+  const [note, setNote] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -52,7 +53,7 @@ export default function StockPage() {
     if (!selected) return;
 
     try {
-      await ChangeStock(selected.variantId, mode, Number(quantity));
+      await ChangeStock(selected.variantId, mode, Number(quantity), note);
 
       const data = await GetStock(page, search, lowOnly);
       setStocks(data.data);
@@ -153,7 +154,7 @@ export default function StockPage() {
             <Tr key={stock.variantId}>
               <Td className="font-medium">{stock.productName}</Td>
               <Td className="text-ink-secondary">{stock.variantName}</Td>
-              <Td className="font-mono text-xs text-accent">{stock.sku}</Td>
+              <Td className="font-mono text-accent text-xs">{stock.sku}</Td>
               <Td>
                 <Badge
                   variant={stock.status === "active" ? "success" : "neutral"}
@@ -183,6 +184,7 @@ export default function StockPage() {
                       setSelected(stock);
                       setQuantity("");
                       setSaveError("");
+                      setNote("");
                     }}
                   >
                     Adjust
@@ -194,6 +196,18 @@ export default function StockPage() {
         </tbody>
       </Table>
     );
+  }
+
+  let afterSaving = 0;
+  if (selected) {
+    afterSaving = selected.stockQuantity;
+
+    if (quantity !== "") {
+      afterSaving =
+        mode === "set"
+          ? Number(quantity)
+          : selected.stockQuantity + Number(quantity);
+    }
   }
 
   return (
@@ -225,9 +239,42 @@ export default function StockPage() {
             label={mode === "set" ? "New quantity" : "+ / - amount"}
             type="number"
             value={quantity}
-            error={saveError}
-            onChange={(e) => setQuantity(e.target.value)}
+            error={
+              saveError || (afterSaving < 0 ? "Stock can't go below zero." : "")
+            }
+            onChange={(e) => {
+              setQuantity(e.target.value);
+              setSaveError("");
+            }}
           />
+
+          {mode === "adjust" ? (
+            <div className="mt-4">
+              <Input
+                label="Note"
+                placeholder="e.g. Damaged"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+              />
+            </div>
+          ) : null}
+
+          <div className="grid grid-cols-2 bg-canvas rounded-lg p-4 mt-4">
+            <div>
+              <p className="text-xs text-ink-secondary">Current</p>
+              <p className="text-xl font-semibold text-ink tabular-nums">
+                {selected.stockQuantity}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-ink-secondary">After saving</p>
+              <p
+                className={`text-xl font-semibold tabular-nums ${afterSaving < 0 ? "text-danger" : "text-accent"}`}
+              >
+                {afterSaving}
+              </p>
+            </div>
+          </div>
 
           <div className="flex justify-end gap-2 mt-5">
             <Button variant="secondary" onClick={() => setSelected(null)}>

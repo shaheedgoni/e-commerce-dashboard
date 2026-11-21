@@ -16,10 +16,12 @@ export async function ChangeStock(
   variantId: string,
   mode: string,
   quantity: number,
+  note: string,
 ) {
   const response = await api.post(`/admin/variants/${variantId}/stock`, {
     mode,
     quantity,
+    note: note || undefined,
   });
   return response.data;
 }

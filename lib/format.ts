@@ -18,22 +18,24 @@ const nairaFormatter = new Intl.NumberFormat("en-NG", {
   currency: "NGN",
 });
 
-export function formatDate(date: string) {
+function formatDate(date: string) {
   return dateFormatter.format(new Date(date));
 }
 
-export function formatDateTime(date: string) {
+function formatDateTime(date: string) {
   return dateTimeFormatter.format(new Date(date));
 }
 
-export function formatNaira(kobo: number) {
+function formatNaira(kobo: number) {
   return nairaFormatter.format(kobo / 100);
 }
 
-export function captilaze(word: string) {
+function captilaze(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-export function getInitials(firstName: string, lastName: string) {
+function getInitials(firstName: string, lastName: string) {
   return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
 }
+
+export { formatDate, formatDateTime, formatNaira, captilaze, getInitials };

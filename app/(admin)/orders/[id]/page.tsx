@@ -3,30 +3,49 @@
 import Badge from "@/components/ui/badge";
 import Button from "@/components/ui/button";
 import Card from "@/components/ui/card";
-import { ErrorState, Skeleton } from "@/components/ui/state";
+import Link from "next/link";
 import {
   captilaze,
   formatDateTime,
   formatNaira,
   getInitials,
 } from "@/lib/format";
-import { GetOrder } from "@/lib/services/order";
+import { ErrorState, Skeleton } from "@/components/ui/state";
+import { ChangeOrderState, GetOrder } from "@/lib/services/order";
 import { channelMap, orderStateMap } from "@/lib/statusMap";
 import { TitleContext } from "@/lib/titleContext";
 import { orderDetailProps } from "@/types/orderTypes";
-import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { useParams } from "next/navigation";
-import { title } from "process";
 import { useContext, useEffect, useState } from "react";
+import Modal from "@/components/ui/modal";
 
 export default function OrderDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
   const [order, setOrder] = useState<orderDetailProps | null>(null);
-  const [error, setError] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [showCancel, setShowCancel] = useState(false);
 
   const { setTitle } = useContext(TitleContext);
+
+  async function handleTransition(to: string) {
+    setSaving(true);
+    setMessage("");
+
+    try {
+      const updated = await ChangeOrderState(id, to);
+      setOrder(updated);
+    } catch {
+      setMessage("Couldn't update the order. Try again.");
+    }
+    setSaving(false);
+    setShowCancel(false);
+  }
 
   useEffect(() => {
     async function load() {
@@ -35,13 +54,13 @@ export default function OrderDetailPage() {
         setOrder(data);
         setTitle(data.number);
       } catch {
-        setError(true);
+        setLoadError(true);
       }
     }
     load();
-  }, [id]);
+  }, [id, setTitle]);
 
-  if (error) {
+  if (loadError) {
     return (
       <div className="bg-surface border border-line rounded-xl">
         <ErrorState
@@ -66,10 +85,16 @@ export default function OrderDetailPage() {
     <div className="flex flex-col gap-6">
       <Link
         href="/orders"
-        className="text-sm text-ink-secondary hover:text-ink"
+        className="text-lg text-ink-secondary hover:text-ink hover:underline w-fit flex items-center gap-1"
       >
-        ← Orders
+        <ArrowLeft size={20} /> <span>Orders</span>
       </Link>
+
+      {message ? (
+        <div className="bg-red-50 border border-red-200 text-danger text-sm rounded-lg px-4 py-3">
+          {message}
+        </div>
+      ) : null}
 
       <div className="flex items-start justify-between">
         <div>
@@ -87,14 +112,35 @@ export default function OrderDetailPage() {
           </p>
         </div>
 
-        {order.state === "paid" ? (
-          <div className="flex gap-2">
-            <Button variant="secondary" className="text-danger">
+        <div className="flex gap-2">
+          {order.state === "paid" || order.state === "pending_payment" ? (
+            <Button
+              variant="secondary"
+              className="text-danger"
+              onClick={() => setShowCancel(true)}
+            >
               Cancel order
             </Button>
-            <Button>Mark as shipped</Button>
-          </div>
-        ) : null}
+          ) : null}
+
+          {order.state === "paid" ? (
+            <Button
+              loading={saving}
+              onClick={() => handleTransition("shipped")}
+            >
+              Mark as shipped
+            </Button>
+          ) : null}
+
+          {order.state === "shipped" ? (
+            <Button
+              loading={saving}
+              onClick={() => handleTransition("delivered")}
+            >
+              Mark as delivered
+            </Button>
+          ) : null}
+        </div>
       </div>
 
       <div className="grid grid-cols-3 gap-6 items-start">
@@ -306,6 +352,28 @@ export default function OrderDetailPage() {
           </Card>
         </div>
       </div>
+
+      {showCancel ? (
+        <Modal
+          title={`Cancel ${order.number}?`}
+          subtitle="Stock for paid orders goes back. This can't be undone."
+          onClose={() => setShowCancel(false)}
+        >
+          <div className="flex justify-end gap-2 pt-2">
+            <Button variant="secondary" onClick={() => setShowCancel(false)}>
+              Keep order
+            </Button>
+
+            <Button
+              variant="danger"
+              loading={saving}
+              onClick={() => handleTransition("cancelled")}
+            >
+              Cancel order
+            </Button>
+          </div>
+        </Modal>
+      ) : null}
     </div>
   );
 }

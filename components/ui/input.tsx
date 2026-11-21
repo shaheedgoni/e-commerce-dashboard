@@ -15,7 +15,9 @@ export default function Input({
   onChange,
   error = "",
 }: inputProps) {
-  const borderColor = error ? "border-danger" : "border-line";
+  const borderColor = error
+    ? "border-danger focus:border-danger focus:ring-2 focus:ring-danger/20"
+    : "border-line focus:border-accent focus:ring-2 focus:ring-accent/20";
 
   return (
     <label className="flex flex-col">
@@ -26,9 +28,9 @@ export default function Input({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`h-10 px-3 rounded-lg border ${borderColor} bg-surface text-sm text-ink placeholder:text-ink-muted outline-none focus:border-accent focus:ring-2 focus:ring-accent/20`}
+        className={`h-10 px-3 rounded-lg border bg-surface text-sm text-ink placeholder:text-ink-muted outline-none ${borderColor}`}
       />
-      {error ? <p className="text-xs text-danger">{error}</p> : null}
+      {error ? <p className="text-xs mt-1 text-danger">{error}*</p> : null}
     </label>
   );
 }

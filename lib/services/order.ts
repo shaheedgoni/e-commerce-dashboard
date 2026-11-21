@@ -27,3 +27,11 @@ export async function GetOrder(id: string) {
   const response = await api.get<orderDetailProps>(`/admin/orders/${id}`);
   return response.data;
 }
+
+export async function ChangeOrderState(id: string, to: string) {
+  const response = await api.post(`/admin/orders/${id}/transition`, {
+    to: to,
+  });
+
+  return response.data;
+}

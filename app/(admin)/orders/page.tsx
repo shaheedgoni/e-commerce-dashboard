@@ -184,7 +184,23 @@ export default function OrdersPage() {
                   {order.number}
                 </Link>
               </Td>
-              <Td>{order.customer ? order.customer.name : "Walk-in"}</Td>
+              <Td>
+                {order.customer ? (
+                  <div>
+                    <p className="text-ink">{order.customer.name}</p>
+                    <p className="text-xs text-ink-secondary">
+                      {order.customer.email}
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-ink">Walk-in</p>
+                    <p className="text-xs text-ink-secondary">
+                      No customer account
+                    </p>
+                  </div>
+                )}
+              </Td>
               <Td>
                 <Badge variant={channelMap[order.channel].variant}>
                   {channelMap[order.channel].label}
