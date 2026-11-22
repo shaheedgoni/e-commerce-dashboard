@@ -6,7 +6,7 @@ type statusInfo = {
 };
 
 export const orderStateMap: Record<string, statusInfo> = {
-  O: {
+  Open: {
     label: "Open",
     variant: "neutral",
   },

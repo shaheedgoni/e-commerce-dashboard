@@ -8,6 +8,7 @@ import { Table, Td, Th, Tr } from "@/components/ui/table";
 import { formatDate, formatNaira } from "@/lib/format";
 import { GetCustomers } from "@/lib/services/customer";
 import { customersProps } from "@/types/customerTypes";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function CustomersPage() {
@@ -97,7 +98,12 @@ export default function CustomersPage() {
           {customers.map((customer) => (
             <Tr key={customer.id}>
               <Td className="font-medium">
-                {customer.firstName} {customer.lastName}
+                <Link
+                  href={`/customers/${customer.id}`}
+                  className="hover:text-accent hover:underline"
+                >
+                  {customer.firstName} {customer.lastName}
+                </Link>
               </Td>
               <Td className="text-ink-secondary">{customer.email}</Td>
               <Td className="text-ink-secondary">{customer.phone || "-"}</Td>

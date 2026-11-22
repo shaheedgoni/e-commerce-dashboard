@@ -280,7 +280,12 @@ export default function StockPage() {
             <Button variant="secondary" onClick={() => setSelected(null)}>
               Cancel
             </Button>
-            <Button onClick={handleSave}>Save</Button>
+            <Button
+              onClick={handleSave}
+              disabled={quantity === "" || afterSaving < 0}
+            >
+              Save
+            </Button>
           </div>
         </Modal>
       ) : null}
