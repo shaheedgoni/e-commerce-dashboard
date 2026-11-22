@@ -8,6 +8,7 @@ import { api } from "@/lib/api";
 import { GetUser, Refresh } from "@/lib/services/auth";
 import { TitleContext } from "@/lib/titleContext";
 import { NoAccessState } from "@/components/ui/state";
+import AccessGuard from "@/components/navigation/access-guard";
 
 export default function AdminLayout({
   children,
@@ -33,13 +34,6 @@ export default function AdminLayout({
 
   if (!ready) return null;
 
-  const user = GetUser();
-  const blocked =
-    user.role !== "admin" &&
-    sidebarContent.some(
-      (item) => item.adminOnly && pathname.startsWith(item.href),
-    );
-
   return (
     <TitleContext.Provider value={{ title, setTitle }}>
       <div className="flex min-h-screen">
@@ -49,11 +43,7 @@ export default function AdminLayout({
           <Header />
 
           <main className="flex-1 p-8">
-            {blocked ? (
-              <NoAccessState onBack={() => router.push("/orders")} />
-            ) : (
-              children
-            )}
+            <AccessGuard>{children}</AccessGuard>
           </main>
         </div>
       </div>

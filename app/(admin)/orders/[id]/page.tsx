@@ -4,29 +4,31 @@ import Badge from "@/components/ui/badge";
 import Button from "@/components/ui/button";
 import Card from "@/components/ui/card";
 import Link from "next/link";
+import Modal from "@/components/ui/modal";
 import {
   captilaze,
   formatDateTime,
   formatNaira,
   getInitials,
 } from "@/lib/format";
-import { ErrorState, Skeleton } from "@/components/ui/state";
+import { ErrorState, NotFoundState, Skeleton } from "@/components/ui/state";
 import { ChangeOrderState, GetOrder } from "@/lib/services/order";
 import { channelMap, orderStateMap } from "@/lib/statusMap";
 import { TitleContext } from "@/lib/titleContext";
 import { orderDetailProps } from "@/types/orderTypes";
 import { ArrowLeft } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import Modal from "@/components/ui/modal";
+import axios from "axios";
 
 export default function OrderDetailPage() {
+  const router = useRouter();
   const params = useParams();
   const id = params.id as string;
 
+  const [notFound, setNotFound] = useState(false);
   const [order, setOrder] = useState<orderDetailProps | null>(null);
   const [loadError, setLoadError] = useState(false);
-
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [showCancel, setShowCancel] = useState(false);
@@ -53,12 +55,33 @@ export default function OrderDetailPage() {
         const data = await GetOrder(id);
         setOrder(data);
         setTitle(data.number);
-      } catch {
-        setLoadError(true);
+      } catch (error) {
+        if (
+          axios.isAxiosError(error) &&
+          error.response &&
+          (error.response.status === 404 || error.response.status === 400)
+        ) {
+          setTitle("");
+          setNotFound(true);
+        } else {
+          setLoadError(true);
+        }
       }
     }
     load();
   }, [id, setTitle]);
+
+  if (notFound) {
+    return (
+      <div className="bg-surface border border-line rounded-xl">
+        <NotFoundState
+          message="This Order doesn't exist"
+          backLabel="Back to Orders"
+          onBack={() => router.push("/orders")}
+        />
+      </div>
+    );
+  }
 
   if (loadError) {
     return (

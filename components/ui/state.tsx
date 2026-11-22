@@ -1,4 +1,4 @@
-import { CircleAlert, Inbox, Lock } from "lucide-react";
+import { ChevronLeft, CircleAlert, Inbox, Lock } from "lucide-react";
 import Button from "./button";
 
 export function Skeleton({ className = "" }: { className?: string }) {
@@ -61,6 +61,29 @@ export function NoAccessState({ onBack }: noAccessState) {
       </p>
       <Button className="mt-5" onClick={onBack}>
         Back to Orders
+      </Button>
+    </div>
+  );
+}
+
+type notFoundStateProps = {
+  message: string;
+  backLabel: string;
+  onBack: () => void;
+};
+
+export function NotFoundState({
+  message,
+  onBack,
+  backLabel,
+}: notFoundStateProps) {
+  return (
+    <div className="flex flex-col items-center text-center py-16 px-6">
+      <p className="text-5xl font-semibold text-stone-300">404</p>
+      <p className="font-medium text-ink mt-4">{message}</p>
+      <Button variant="secondary" className="mt-4" onClick={onBack}>
+        <ChevronLeft size={16} />
+        {backLabel}
       </Button>
     </div>
   );
