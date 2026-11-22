@@ -1,7 +1,5 @@
 "use client";
 
-import { GetUser } from "@/lib/services/auth";
-import { sidebarContentProps } from "@/types/sidebar";
 import {
   Box,
   Contact,
@@ -13,12 +11,14 @@ import {
   Tag,
   Users,
 } from "lucide-react";
-import Link from "next/link";
+import { GetUser } from "@/lib/services/auth";
+import { sidebarContentProps } from "@/types/sidebar";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Logo from "../ui/logo";
+import Link from "next/link";
 
-const sidebarContent: sidebarContentProps[] = [
+export const sidebarContent: sidebarContentProps[] = [
   {
     adminOnly: true,
     icon: LayoutGrid,

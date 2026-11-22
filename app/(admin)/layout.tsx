@@ -1,12 +1,13 @@
 "use client";
 
-import Sidebar from "@/components/navigation/sidebar";
+import Sidebar, { sidebarContent } from "@/components/navigation/sidebar";
 import Header from "@/components/navigation/header";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
-import { Refresh } from "@/lib/services/auth";
+import { GetUser, Refresh } from "@/lib/services/auth";
 import { TitleContext } from "@/lib/titleContext";
+import { NoAccessState } from "@/components/ui/state";
 
 export default function AdminLayout({
   children,
@@ -14,6 +15,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [ready, setReady] = useState(
     Boolean(api.defaults.headers.common.Authorization),
   );
@@ -31,6 +33,13 @@ export default function AdminLayout({
 
   if (!ready) return null;
 
+  const user = GetUser();
+  const blocked =
+    user.role !== "admin" &&
+    sidebarContent.some(
+      (item) => item.adminOnly && pathname.startsWith(item.href),
+    );
+
   return (
     <TitleContext.Provider value={{ title, setTitle }}>
       <div className="flex min-h-screen">
@@ -39,7 +48,13 @@ export default function AdminLayout({
         <div className="flex min-w-0 flex-1 flex-col">
           <Header />
 
-          <main className="flex-1 p-8">{children}</main>
+          <main className="flex-1 p-8">
+            {blocked ? (
+              <NoAccessState onBack={() => router.push("/orders")} />
+            ) : (
+              children
+            )}
+          </main>
         </div>
       </div>
     </TitleContext.Provider>

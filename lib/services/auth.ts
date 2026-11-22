@@ -41,7 +41,6 @@ export async function Refresh() {
   );
 
   api.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`;
-
   currentUser = response.data.user;
 
   return response.data.user;
