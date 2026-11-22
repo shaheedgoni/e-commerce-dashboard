@@ -1,14 +1,13 @@
 "use client";
 
-import Sidebar, { sidebarContent } from "@/components/navigation/sidebar";
 import Header from "@/components/navigation/header";
-import { usePathname, useRouter } from "next/navigation";
+import AccessGuard from "@/components/navigation/access-guard";
+import Sidebar from "@/components/navigation/sidebar";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
-import { GetUser, Refresh } from "@/lib/services/auth";
+import { Refresh } from "@/lib/services/auth";
 import { TitleContext } from "@/lib/titleContext";
-import { NoAccessState } from "@/components/ui/state";
-import AccessGuard from "@/components/navigation/access-guard";
 
 export default function AdminLayout({
   children,
@@ -16,7 +15,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
+
   const [ready, setReady] = useState(
     Boolean(api.defaults.headers.common.Authorization),
   );

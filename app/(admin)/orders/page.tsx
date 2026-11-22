@@ -28,10 +28,20 @@ export default function OrdersPage() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
+  const pageSize = 20;
+
   useEffect(() => {
     async function load() {
       try {
-        const data = await GetOrders(page, search, state, channel, from, to);
+        const data = await GetOrders(
+          page,
+          pageSize,
+          search,
+          state,
+          channel,
+          from,
+          to,
+        );
         setError(false);
         setOrders(data.data);
         setTotal(data.meta.total);
@@ -154,7 +164,7 @@ export default function OrdersPage() {
         footer={
           <Pagination
             page={page}
-            limit={20}
+            limit={pageSize}
             total={total}
             onPageChange={setPage}
           />

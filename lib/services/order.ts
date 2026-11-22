@@ -3,6 +3,7 @@ import { api } from "../api";
 
 export async function GetOrders(
   page: number,
+  limit: number,
   q: string,
   state: string,
   channel: string,
@@ -12,6 +13,7 @@ export async function GetOrders(
   const response = await api.get<ordersResponseProps>("/admin/orders", {
     params: {
       page: page,
+      limit: limit,
       q: q || undefined,
       state: state || undefined,
       channel: channel || undefined,
