@@ -18,3 +18,23 @@ export async function GetStaff(
 
   return response.data;
 }
+
+export async function CreateStaff(
+  firstName: string,
+  lastName: string,
+  email: string,
+  phone: string,
+  role: string,
+  password: string,
+) {
+  const respone = await api.post("/admin/users", {
+    firstName,
+    lastName,
+    email,
+    phone: phone || undefined,
+    role,
+    password,
+  });
+
+  return respone.data;
+}
